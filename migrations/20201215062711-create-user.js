@@ -19,7 +19,7 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      role_id: {
+      role: {
         type: Sequelize.STRING,
       },
       createdAt: {
@@ -27,10 +27,6 @@ module.exports = {
         type: Sequelize.DATE,
       },
       updatedAt: {
-        allowNull: false,
-        type: Sequelize.DATE,
-      },
-      deletedAt: {
         allowNull: false,
         type: Sequelize.DATE,
       },

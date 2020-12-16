@@ -25,25 +25,21 @@ module.exports = {
       },
       noted: {
         type: Sequelize.TEXT,
-        allowNull: false,
+        allowNull: true,
       },
       check_in_time: {
         type: Sequelize.DATE,
-        allowNull: false,
+        allowNull: true,
       },
       check_out_time: {
         type: Sequelize.DATE,
-        allowNull: false,
+        allowNull: true,
       },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
       },
       updatedAt: {
-        allowNull: false,
-        type: Sequelize.DATE,
-      },
-      deletedAt: {
         allowNull: false,
         type: Sequelize.DATE,
       },

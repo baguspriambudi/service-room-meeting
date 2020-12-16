@@ -1,5 +1,5 @@
 const { DataTypes } = require('sequelize');
-const sequelize = require('../config/config.json');
+const sequelize = require('../connection/connection');
 
 module.exports = sequelize.define('User', {
   room_name: { type: DataTypes.STRING, allowNull: false },
