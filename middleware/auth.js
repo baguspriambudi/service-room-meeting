@@ -1,7 +1,7 @@
 const JWT = require('jsonwebtoken');
 const User = require('../models/user');
 
-const JWTsecret = process.env.JWT_KEY;
+const JWTsekret = 'afdsghjl35sdagh76389y983y4';
 const {
   httpUnauthorizedRespone,
   httpNotFound,
@@ -17,10 +17,10 @@ exports.isAdmin = async (req, res, next) => {
     }
 
     const token = headers.split(' ')[1];
-    const decode = JWT.verify(token, JWTsecret);
+    const decode = JWT.verify(token, JWTsekret);
     req.user = decode;
 
-    const admin = await User.findById({ _id: req.user._id });
+    const admin = await User.findByPk(req.user.id);
     if (!admin) {
       return httpNotFound(res, 'User not found');
     }
@@ -41,7 +41,7 @@ exports.isGuest = async (req, res, next) => {
     }
 
     const token = headers.split(' ')[1];
-    const decode = JWT.verify(token, JWTsecret);
+    const decode = JWT.verify(token, JWTsekret);
     req.user = decode;
 
     const admin = await User.findById({ _id: req.user._id });

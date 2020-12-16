@@ -7,7 +7,7 @@ const fs = require('fs');
 const User = require('../models/user');
 const { httpOkResponse, httpAuthenticationFailed, httpNotFound } = require('../helper/http_respone');
 
-const JWTsekret = process.env.JWT_KEY;
+const JWTsekret = 'afdsghjl35sdagh76389y983y4';
 
 cloudinary.config({
   cloud_name: 'yourname',

@@ -31,7 +31,7 @@ const upload = pify(
   }).single('file'),
 );
 
-exports.create = async (req, res, next) => {
+exports.createRoom = async (req, res, next) => {
   try {
     await upload(req, res);
     const { path } = req.file;
@@ -48,11 +48,11 @@ exports.create = async (req, res, next) => {
 
     const image = await getUrl();
     const { name, capacity } = req.body;
-    const roomName = await Room.findOne({ where: { room_name: name } });
+    const roomName = await Room.findOne({ where: { name } });
     if (roomName) {
       return httpAuthenticationFailed(res, 'room is already use');
     }
-    const room = await Room.create({ room_name: name, room_capacity: capacity, photo: image });
+    const room = await Room.create({ name, capacity, photo: image });
     httpOkResponse(res, 'success created user', room);
   } catch (error) {
     if (error instanceof multer.MulterError) {
