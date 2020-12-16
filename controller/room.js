@@ -1,3 +1,4 @@
+/* eslint-disable array-callback-return */
 const multer = require('multer');
 const cloudinary = require('cloudinary').v2;
 const pify = require('pify');
@@ -67,5 +68,21 @@ exports.createRoom = async (req, res, next) => {
       return res.status(400).json({ status: 400, error: 'please input file' });
     }
     next(error);
+  }
+};
+
+exports.showRooms = async (req, res, next) => {
+  try {
+    const findRooms = await Room.findAll();
+    const room = [];
+    // eslint-disable-next-line no-unused-vars
+    const capacity = findRooms.map((val) => {
+      if (val.capacity !== 0) {
+        room.push(val);
+      }
+    });
+    httpOkResponse(res, 'success get data', room);
+  } catch (error) {
+    next();
   }
 };
