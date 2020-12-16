@@ -1,9 +1,9 @@
-const Room = require('../models/room');
 const multer = require('multer');
 const cloudinary = require('cloudinary').v2;
 const pify = require('pify');
 const fs = require('fs');
-const { httpOkResponse, httpAuthenticationFailed, httpNotFound } = require('../helper/http_respone');
+const Room = require('../models/room');
+const { httpOkResponse, httpAuthenticationFailed } = require('../helper/http_respone');
 
 cloudinary.config({
   cloud_name: 'yourname',
@@ -31,7 +31,7 @@ const upload = pify(
   }).single('file'),
 );
 
-exports.createUser = async (req, res, next) => {
+exports.create = async (req, res, next) => {
   try {
     await upload(req, res);
     const { path } = req.file;
@@ -47,14 +47,13 @@ exports.createUser = async (req, res, next) => {
     };
 
     const image = await getUrl();
-    const { email, password, role } = req.body;
-    const findUser = await User.findOne({ where: { email: email } });
-    if (findUser) {
-      return httpAuthenticationFailed(res, 'username already use');
+    const { name, capacity } = req.body;
+    const roomName = await Room.findOne({ where: { room_name: name } });
+    if (roomName) {
+      return httpAuthenticationFailed(res, 'room is already use');
     }
-    const passwordHash = bcrypt.hashSync(password, 10);
-    const user = await User.create({ email, password: passwordHash, photo: image, role });
-    httpOkResponse(res, 'success created user', user);
+    const room = await Room.create({ room_name: name, room_capacity: capacity, photo: image });
+    httpOkResponse(res, 'success created user', room);
   } catch (error) {
     if (error instanceof multer.MulterError) {
       return res.status(400).json({ status: 400, error: error.message });

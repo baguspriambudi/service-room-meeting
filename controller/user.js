@@ -7,7 +7,7 @@ const fs = require('fs');
 const User = require('../models/user');
 const { httpOkResponse, httpAuthenticationFailed, httpNotFound } = require('../helper/http_respone');
 
-const JWTsekret = 'abagdasadhye46w6';
+const JWTsekret = process.env.JWT_KEY;
 
 cloudinary.config({
   cloud_name: 'yourname',
@@ -60,13 +60,16 @@ exports.createUser = async (req, res, next) => {
     const user = await User.create({ email, password: passwordHash, photo: image, role });
     httpOkResponse(res, 'success created user', user);
   } catch (error) {
+    // handle error upload in cloudinary
     if (error instanceof multer.MulterError) {
       return res.status(400).json({ status: 400, error: error.message });
     }
+    // handle file image .png .jpg and .jpeg
     if (req.fileValidationError) {
       // eslint-disable-next-line no-undef
       return res.status(400).json({ status: 400, error: req.fileValidationError });
     }
+    // handle file is required
     if (!req.file) {
       return res.status(400).json({ status: 400, error: 'please input file' });
     }
