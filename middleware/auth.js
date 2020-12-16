@@ -1,7 +1,9 @@
 const JWT = require('jsonwebtoken');
 const User = require('../models/user');
+require('dotenv').config();
 
-const JWTsekret = 'afdsghjl35sdagh76389y983y4';
+const JWTsekret = process.env.JWT_KEY;
+
 const {
   httpUnauthorizedRespone,
   httpNotFound,

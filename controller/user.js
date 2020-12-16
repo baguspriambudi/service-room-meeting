@@ -4,15 +4,16 @@ const multer = require('multer');
 const cloudinary = require('cloudinary').v2;
 const pify = require('pify');
 const fs = require('fs');
+require('dotenv').config();
 const User = require('../models/user');
 const { httpOkResponse, httpAuthenticationFailed, httpNotFound } = require('../helper/http_respone');
 
-const JWTsekret = 'afdsghjl35sdagh76389y983y4';
+const JWTsekret = process.env.JWT_KEY;
 
 cloudinary.config({
-  cloud_name: 'yourname',
-  api_key: '848646876319268',
-  api_secret: 'TVsH1hdS304H-k9Ee6FehpJDiw0',
+  cloud_name: process.env.NAME_CLOUD,
+  api_key: process.env.API_KEY,
+  api_secret: process.env.API_SECRET,
 });
 
 const storage = multer.diskStorage({
