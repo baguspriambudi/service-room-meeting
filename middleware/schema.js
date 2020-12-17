@@ -28,3 +28,15 @@ exports.midBooking = (req, res, next) => {
   }
   next();
 };
+
+exports.midCheckIn = (req, res, next) => {
+  const schema = Joi.object({
+    room: Joi.number().required(),
+  }).options({ abortEarly: false });
+
+  const { error } = schema.validate(req.body);
+  if (error) {
+    return httpValidasiDataErrorRespone(res, error.details);
+  }
+  next();
+};

@@ -6,6 +6,6 @@ const schema = require('../middleware/schema');
 
 const router = express.Router();
 router.post('/create', auth.isGuest, schema.midBooking, bookingController.bookingCreate);
-router.post('/checkIn', auth.isGuest, bookingController.checkIn);
+router.post('/checkIn', auth.isGuest, schema.midCheckIn, bookingController.checkIn);
 
 module.exports = router;
