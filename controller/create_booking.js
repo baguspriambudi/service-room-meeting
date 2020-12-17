@@ -15,6 +15,7 @@ const transporter = nodemailer.createTransport({
 
 exports.bookingCreate = async (req, res, next) => {
   try {
+    // get email user from token
     const findEmail = await User.findByPk(req.user.id);
     const mailOptions = {
       from: 'baguspriambudi@gmail.com',
