@@ -3,10 +3,10 @@ const dotenv = require('dotenv');
 const morgan = require('morgan');
 const routes = require('./router');
 
+dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 4000;
 
-dotenv.config();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 if (process.env.NODE_ENV !== 'test') app.use(morgan('combined'));
