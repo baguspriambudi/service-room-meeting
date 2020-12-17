@@ -15,6 +15,7 @@ const transporter = nodemailer.createTransport({
 
 exports.bookingCreate = async (req, res, next) => {
   try {
+    const { room, total, time, noted } = req.body;
     // get email user from token
     const findEmail = await User.findByPk(req.user.id);
     const mailOptions = {
@@ -23,24 +24,23 @@ exports.bookingCreate = async (req, res, next) => {
       subject: 'testing',
       text: 'success',
     };
-    const { room, time, noted } = req.body;
     const findRoom = await Room.findByPk(room);
     if (!findRoom) {
       return httpNotFound(res, 'room not found');
     }
-    if (findRoom.capacity === 0) {
-      return httpAuthenticationFailed(res, 'room capacity full');
+    const capacity = findRoom.capacity >= total;
+    if (capacity === false) {
+      return httpAuthenticationFailed(res, 'room over capacity');
     }
     const create = await Booking.create({
-      user_id: req.user.id,
-      room_id: room,
+      userId: req.user.id,
+      roomId: room,
+      total_person: total,
       booking_time: time,
       noted,
     });
     if (create) {
-      await Room.update({ capacity: findRoom.capacity - 1 }, { where: { id: room } });
       await transporter.sendMail(mailOptions);
-      //   await Booking.update({ total_person: create.total_person + 1 }, { where: { id: create.id } });
     }
     httpOkResponse(res, 'success, please check your email', create);
   } catch (error) {
@@ -48,9 +48,9 @@ exports.bookingCreate = async (req, res, next) => {
   }
 };
 
-exports.checkIn = async (req, res, next) => {
-  try {
-  } catch (error) {
-    next(error);
-  }
-};
+// exports.checkIn = async (req, res, next) => {
+//   try {
+//   } catch (error) {
+//     next(error);
+//   }
+// };

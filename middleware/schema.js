@@ -19,6 +19,7 @@ exports.midBooking = (req, res, next) => {
     room: Joi.number().required(),
     time: Joi.date().required(),
     noted: Joi.string().allow(''),
+    total: Joi.number().required(),
   }).options({ abortEarly: false });
 
   const { error } = schema.validate(req.body);
