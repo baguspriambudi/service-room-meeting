@@ -46,7 +46,7 @@ exports.isGuest = async (req, res, next) => {
     const decode = JWT.verify(token, JWTsekret);
     req.user = decode;
 
-    const admin = await User.findById({ _id: req.user._id });
+    const admin = await User.findByPk(req.user.id);
     if (!admin) {
       return httpNotFound(res, 'User not found');
     }

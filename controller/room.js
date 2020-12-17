@@ -83,6 +83,6 @@ exports.showRooms = async (req, res, next) => {
     });
     httpOkResponse(res, 'success get data', room);
   } catch (error) {
-    next();
+    next(error);
   }
 };

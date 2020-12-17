@@ -17,10 +17,9 @@ module.exports = {
       },
       total_person: {
         type: Sequelize.INTEGER,
-        allowNull: false,
       },
       booking_time: {
-        type: Sequelize.DATE,
+        type: Sequelize.STRING,
         allowNull: false,
       },
       noted: {
@@ -28,12 +27,10 @@ module.exports = {
         allowNull: true,
       },
       check_in_time: {
-        type: Sequelize.DATE,
-        allowNull: true,
+        type: Sequelize.STRING,
       },
       check_out_time: {
-        type: Sequelize.DATE,
-        allowNull: true,
+        type: Sequelize.STRING,
       },
       createdAt: {
         allowNull: false,
