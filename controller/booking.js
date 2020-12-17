@@ -47,3 +47,10 @@ exports.bookingCreate = async (req, res, next) => {
     next(error);
   }
 };
+
+exports.checkIn = async (req, res, next) => {
+  try {
+  } catch (error) {
+    next(error);
+  }
+};

@@ -4,9 +4,15 @@ const multer = require('multer');
 const cloudinary = require('cloudinary').v2;
 const pify = require('pify');
 const fs = require('fs');
+const Joi = require('joi');
 require('dotenv').config();
 const User = require('../models/user');
-const { httpOkResponse, httpAuthenticationFailed, httpNotFound } = require('../helper/http_respone');
+const {
+  httpOkResponse,
+  httpAuthenticationFailed,
+  httpNotFound,
+  httpValidasiDataErrorRespone,
+} = require('../helper/http_respone');
 
 const JWTsekret = process.env.JWT_KEY;
 
@@ -38,6 +44,7 @@ const upload = pify(
 
 exports.createUser = async (req, res, next) => {
   try {
+    // upload file in cloudinary
     await upload(req, res);
     const { path } = req.file;
     const uploadPreset = 'uploader';
@@ -51,13 +58,28 @@ exports.createUser = async (req, res, next) => {
       return data;
     };
 
+    // get data file url
     const image = await getUrl();
     const { email, password, role } = req.body;
+    // validate body is required
+    const schema = Joi.object({
+      email: Joi.string().required(),
+      password: Joi.string().required(),
+    }).options({ abortEarly: false });
+
+    const { error } = schema.validate(req.body);
+
+    if (error) {
+      return httpValidasiDataErrorRespone(res, error.details);
+    }
+    // find user has been register
     const findUser = await User.findOne({ where: { email: email } });
     if (findUser) {
-      return httpAuthenticationFailed(res, 'username already use');
+      return httpAuthenticationFailed(res, 'user has been register');
     }
+    // encrypt password
     const passwordHash = bcrypt.hashSync(password, 10);
+    // insert data user
     const user = await User.create({ email, password: passwordHash, photo: image, role });
     httpOkResponse(res, 'success created user', user);
   } catch (error) {
