@@ -19,7 +19,7 @@ module.exports = {
         type: Sequelize.INTEGER,
       },
       booking_time: {
-        type: Sequelize.STRING,
+        type: Sequelize.DATE,
         allowNull: false,
       },
       noted: {
@@ -27,10 +27,10 @@ module.exports = {
         allowNull: true,
       },
       check_in_time: {
-        type: Sequelize.STRING,
+        type: Sequelize.DATE,
       },
       check_out_time: {
-        type: Sequelize.STRING,
+        type: Sequelize.DATE,
       },
       createdAt: {
         allowNull: false,

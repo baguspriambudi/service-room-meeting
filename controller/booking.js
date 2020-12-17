@@ -16,6 +16,7 @@ const transporter = nodemailer.createTransport({
 exports.bookingCreate = async (req, res, next) => {
   try {
     const { room, total, time, noted } = req.body;
+    const formatDate = new Date(time).toISOString();
     // get email user from token
     const findEmail = await User.findByPk(req.user.id);
     const mailOptions = {
@@ -36,7 +37,7 @@ exports.bookingCreate = async (req, res, next) => {
       userId: req.user.id,
       roomId: room,
       total_person: total,
-      booking_time: time,
+      booking_time: formatDate,
       noted,
     });
     if (create) {
