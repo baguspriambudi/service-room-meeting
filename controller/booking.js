@@ -29,6 +29,9 @@ exports.bookingCreate = async (req, res, next) => {
     if (!findRoom) {
       return httpNotFound(res, 'room not found');
     }
+    if (findRoom.status === 'not available') {
+      return httpAuthenticationFailed(res, 'room not available');
+    }
     const capacity = findRoom.capacity >= total;
     if (capacity === false) {
       return httpAuthenticationFailed(res, 'room over capacity');
@@ -41,6 +44,7 @@ exports.bookingCreate = async (req, res, next) => {
       noted,
     });
     if (create) {
+      await Room.update({ status: 'not available' }, { where: { id: room } });
       await transporter.sendMail(mailOptions);
     }
     httpOkResponse(res, 'success, please check your email', create);

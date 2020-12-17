@@ -6,7 +6,6 @@ const fs = require('fs');
 const Joi = require('joi');
 require('dotenv').config();
 const Room = require('../models/room');
-const Booking = require('../models/booking');
 const { httpOkResponse, httpAuthenticationFailed, httpValidasiDataErrorRespone } = require('../helper/http_respone');
 
 cloudinary.config({
@@ -89,16 +88,9 @@ exports.createRoom = async (req, res, next) => {
 
 exports.showRooms = async (req, res, next) => {
   try {
-    // const findRooms = await Room.findAll();
-    // const room = [];
-    // // eslint-disable-next-line no-unused-vars
-    // const capacity = findRooms.map((val) => {
-    //   if (val.capacity !== 0) {
-    //     room.push(val);
-    //   }
-    // });
-    const findBooking = await Booking.findAll({ include: 'Room' });
-    httpOkResponse(res, 'success get data', findBooking);
+    const findRooms = await Room.findAll({ where: { status: 'available' } });
+    // const findBooking = await Booking.findAll({ include: 'Room' });
+    httpOkResponse(res, 'success get data', findRooms);
   } catch (error) {
     next(error);
   }
