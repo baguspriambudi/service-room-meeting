@@ -10,7 +10,7 @@ exports.httpOkResponse = (res, msg, data) => {
 exports.httpValidasiErroResponse = (res, msg) => {
   res.status(400).json({
     status: 400,
-    message: msg,
+    error: msg,
   });
 };
 
@@ -18,8 +18,8 @@ exports.httpValidasiErroResponse = (res, msg) => {
 exports.httpValidasiDataErrorRespone = (res, error) => {
   res.status(400).json({
     status: 400,
-    message: 'Validation Error',
-    error: error,
+    error: 'Validation Error',
+    data: error,
   });
 };
 
@@ -27,20 +27,20 @@ exports.httpValidasiDataErrorRespone = (res, error) => {
 exports.httpAuthenticationFailed = (res, msg) => {
   res.status(401).json({
     status: 401,
-    message: msg,
+    error: msg,
   });
 };
 // akses untuk token atau dengan kode tertentu
 exports.httpUnauthorizedRespone = (res, msg) => {
   res.status(403).json({
     status: 403,
-    message: msg,
+    error: msg,
   });
 };
 // jika yang dicari tidak ada
 exports.httpNotFound = (res, msg) => {
   res.status(404).json({
     status: 404,
-    message: msg,
+    error: msg,
   });
 };

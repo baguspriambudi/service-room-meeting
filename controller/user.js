@@ -61,7 +61,7 @@ exports.createUser = async (req, res, next) => {
     // get data file url
     const image = await getUrl();
     const { email, password, role } = req.body;
-    // validate body is required
+    // validation body is required
     const schema = Joi.object({
       email: Joi.string().required(),
       password: Joi.string().required(),
