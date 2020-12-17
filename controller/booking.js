@@ -60,6 +60,9 @@ exports.checkIn = async (req, res, next) => {
     if (booking === null && booking.userId === req.user.id) {
       return httpNotFound(res, `can't check in, booking not found`);
     }
+    if (booking.check_in_time !== null) {
+      return httpAuthenticationFailed(res, 'you has been checkIn');
+    }
     const date = new Date();
     const getTimeNow = new Date(date.setHours(7, 0, 0, 0)).getTime();
     const getTimeBooking = new Date(booking.booking_time).getTime();
@@ -97,17 +100,35 @@ exports.checkOut = async (req, res, next) => {
     if (booking.check_in_time === null) {
       return httpAuthenticationFailed(res, 'please checkIn');
     }
+    if (booking.check_out_time !== null) {
+      return httpAuthenticationFailed(res, 'you has been checkOut');
+    }
     const date = new Date();
-    await Promise.all([
-      [
-        Booking.update({ check_out_time: date }, { where: { roomId: room } }),
-        Room.update({ status: 'available' }, { where: { id: room } }),
-      ],
-    ]);
+    await Promise.all(
+      [Booking.update({ check_out_time: date }, { where: { roomId: room } })],
+      [Room.update({ status: 'available' }, { where: { id: room } })],
+    );
     res.status(200).json({
       status: 200,
       message: 'success checkOut',
     });
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.viewBooking = async (_req, res, next) => {
+  try {
+    // eslint-disable-next-line no-dupe-keys
+    const booking = await Booking.findAll({
+      include: [
+        {
+          model: User,
+          as: 'User',
+        },
+      ],
+    });
+    httpOkResponse(res, 'success get data', booking);
   } catch (error) {
     next(error);
   }
