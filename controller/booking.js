@@ -26,7 +26,7 @@ exports.bookingCreate = async (req, res, next) => {
       text: 'success',
     };
     const findRoom = await Room.findByPk(room);
-    if (!findRoom) {
+    if (findRoom === null) {
       return httpNotFound(res, 'room not found');
     }
     if (findRoom.status === 'not available') {
@@ -53,9 +53,36 @@ exports.bookingCreate = async (req, res, next) => {
   }
 };
 
-// exports.checkIn = async (req, res, next) => {
-//   try {
-//   } catch (error) {
-//     next(error);
-//   }
-// };
+exports.checkIn = async (req, res, next) => {
+  try {
+    const { room } = req.body;
+    const booking = await Booking.findOne({ where: { roomId: room } });
+    if (booking === null) {
+      return httpNotFound(res, `can't check in, booking not found`);
+    }
+    const date = new Date();
+    const getTimeNow = new Date(date.setHours(7, 0, 0, 0)).getTime();
+    const getTimeBooking = new Date(booking.booking_time).getTime();
+    if (getTimeNow !== getTimeBooking) {
+      return httpAuthenticationFailed(res, `can't check in, please check check_in_time`);
+    }
+    const checkIn = await Booking.update({ check_in_time: date }, { where: { roomId: room } });
+    // get email user from token
+    const findEmail = await User.findByPk(req.user.id);
+    const mailOptions = {
+      from: 'baguspriambudi@gmail.com',
+      to: findEmail.email,
+      subject: 'testing',
+      text: 'now you checkIn',
+    };
+    if (checkIn) {
+      await transporter.sendMail(mailOptions);
+    }
+    res.status(200).json({
+      status: 200,
+      message: 'success checkIn, please check your email',
+    });
+  } catch (error) {
+    next(error);
+  }
+};
