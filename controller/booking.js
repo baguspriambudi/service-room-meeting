@@ -57,7 +57,7 @@ exports.checkIn = async (req, res, next) => {
   try {
     const { room } = req.body;
     const booking = await Booking.findOne({ where: { roomId: room } });
-    if (booking === null) {
+    if (booking === null && booking.userId === req.user.id) {
       return httpNotFound(res, `can't check in, booking not found`);
     }
     const date = new Date();
@@ -81,6 +81,32 @@ exports.checkIn = async (req, res, next) => {
     res.status(200).json({
       status: 200,
       message: 'success checkIn, please check your email',
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.checkOut = async (req, res, next) => {
+  try {
+    const { room } = req.body;
+    const booking = await Booking.findOne({ where: { roomId: room } });
+    if (booking === null && booking.userId === req.user.id) {
+      return httpNotFound(res, `can't check in, booking not found`);
+    }
+    if (booking.check_in_time === null) {
+      return httpAuthenticationFailed(res, 'please checkIn');
+    }
+    const date = new Date();
+    await Promise.all([
+      [
+        Booking.update({ check_out_time: date }, { where: { roomId: room } }),
+        Room.update({ status: 'available' }, { where: { id: room } }),
+      ],
+    ]);
+    res.status(200).json({
+      status: 200,
+      message: 'success checkOut',
     });
   } catch (error) {
     next(error);
