@@ -16,28 +16,32 @@ const date = new Date();
 const getTimeNow = new Date(date.setHours(7, 0, 0, 0)).getTime();
 // function get data date
 async function getData() {
-  console.log('-----');
-  const result = await Booking.findAll({
-    include: [
-      {
-        model: User,
-        as: 'User',
-      },
-    ],
-  });
-  // eslint-disable-next-line array-callback-return
-  result.map(async (val) => {
-    const mailOptions = {
-      from: 'baguspriambudi@gmail.com',
-      to: val.User.email,
-      subject: 'testing',
-      text: 'please checkIn now',
-    };
-    const dataDate = new Date(val.booking_time).getTime();
-    if (dataDate === getTimeNow) {
-      await transporter.sendMail(mailOptions);
-    }
-  });
+  try {
+    console.log('-----');
+    const result = await Booking.findAll({
+      include: [
+        {
+          model: User,
+          as: 'User',
+        },
+      ],
+    });
+    // eslint-disable-next-line array-callback-return
+    result.map(async (val) => {
+      const mailOptions = {
+        from: 'baguspriambudi@gmail.com',
+        to: val.User.email,
+        subject: 'testing',
+        text: 'please checkIn now',
+      };
+      const dataDate = new Date(val.booking_time).getTime();
+      if (dataDate === getTimeNow) {
+        await transporter.sendMail(mailOptions);
+      }
+    });
+  } catch (error) {
+    console.log(error);
+  }
 }
 // running function every 15  minute
 cron.schedule('*/15 * * * *', () => {
