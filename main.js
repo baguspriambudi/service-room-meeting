@@ -3,6 +3,8 @@ const dotenv = require('dotenv');
 const morgan = require('morgan');
 const routes = require('./router');
 
+require('./controller/schedule');
+
 dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 4000;

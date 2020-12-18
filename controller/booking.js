@@ -23,7 +23,7 @@ exports.bookingCreate = async (req, res, next) => {
       from: 'baguspriambudi@gmail.com',
       to: findEmail.email,
       subject: 'testing',
-      text: 'success',
+      text: 'thank you has been booking',
     };
     const findRoom = await Room.findByPk(room);
     if (findRoom === null) {
