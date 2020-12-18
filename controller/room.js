@@ -89,7 +89,6 @@ exports.createRoom = async (req, res, next) => {
 exports.showRooms = async (req, res, next) => {
   try {
     const findRooms = await Room.findAll({ where: { status: 'available' } });
-    // const findBooking = await Booking.findAll({ include: 'Room' });
     httpOkResponse(res, 'success get data', findRooms);
   } catch (error) {
     next(error);

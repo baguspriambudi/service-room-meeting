@@ -57,7 +57,7 @@ exports.checkIn = async (req, res, next) => {
   try {
     const { room } = req.body;
     const booking = await Booking.findOne({ where: { roomId: room } });
-    if (booking === null && booking.userId === req.user.id) {
+    if (booking === null) {
       return httpNotFound(res, `can't check in, booking not found`);
     }
     if (booking.check_in_time !== null) {
@@ -94,7 +94,7 @@ exports.checkOut = async (req, res, next) => {
   try {
     const { room } = req.body;
     const booking = await Booking.findOne({ where: { roomId: room } });
-    if (booking === null && booking.userId === req.user.id) {
+    if (booking === null) {
       return httpNotFound(res, `can't check in, booking not found`);
     }
     if (booking.check_in_time === null) {

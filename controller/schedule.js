@@ -40,6 +40,6 @@ async function getData() {
   });
 }
 // running function every 15  minute
-cron.schedule('15 * * * *', () => {
+cron.schedule('*/15 * * * *', () => {
   getData();
 });

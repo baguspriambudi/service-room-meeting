@@ -65,6 +65,7 @@ exports.createUser = async (req, res, next) => {
     const schema = Joi.object({
       email: Joi.string().required(),
       password: Joi.string().required(),
+      role: Joi.string().allow('').valid('guest', 'admin'),
     }).options({ abortEarly: false });
 
     const { error } = schema.validate(req.body);
