@@ -1,1 +1,1 @@
-# service-room-meeting | sequelize | mySql
+## sequelize | mysql
